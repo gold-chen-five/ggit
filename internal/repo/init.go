@@ -5,11 +5,13 @@ import (
 	"path/filepath"
 )
 
+var gitDir = ".ggit"
+
 func InitRepository() error {
 	paths := []string{
-		".ggit",
-		".ggit/objects",
-		".ggit/refs/head",
+		gitDir,
+		filepath.Join(gitDir, "objects"),
+		filepath.Join(gitDir, "refs", "head"),
 	}
 
 	for _, path := range paths {
@@ -20,14 +22,14 @@ func InitRepository() error {
 	}
 
 	// Create HEAD file
-	headPath := filepath.Join(".ggit", "HEAD")
+	headPath := filepath.Join(gitDir, "HEAD")
 	headContent := []byte("ref: refs/heads/master\n")
 	if err := os.WriteFile(headPath, headContent, 0644); err != nil {
 		return err
 	}
 
 	// Create config file (empty for now)
-	configPath := filepath.Join(".ggit", "config")
+	configPath := filepath.Join(gitDir, "config")
 	file, err := os.Create(configPath)
 	if err != nil {
 		return err

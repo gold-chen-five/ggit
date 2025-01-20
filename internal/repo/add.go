@@ -24,7 +24,7 @@ func AddFileToIndex(path string) error {
 	fileHash := fmt.Sprintf("%x", hashSum)
 
 	// create folder and file
-	objectDir := filepath.Join(".ggit", "objects", fileHash[:2])
+	objectDir := filepath.Join(gitDir, "objects", fileHash[:2])
 	if err = os.Mkdir(objectDir, 0775); err != nil {
 		return err
 	}
@@ -34,7 +34,7 @@ func AddFileToIndex(path string) error {
 		return err
 	}
 
-	indexPath := filepath.Join(".ggit", "index")
+	indexPath := filepath.Join(gitDir, "index")
 	indexContent := fmt.Sprintf("%s %s\n", fileHash, path)
 	return os.WriteFile(indexPath, []byte(indexContent), 0644)
 }
