@@ -36,7 +36,7 @@ func createTreeOject() (string, error) {
 }
 
 func getParentCommitHash() string {
-	headPath := filepath.Join(gitDir, "HEAD")
+	headPath := filepath.Join(GitDir, "HEAD")
 	headContent, err := os.ReadFile(headPath)
 	if err != nil {
 		return ""

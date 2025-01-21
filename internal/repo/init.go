@@ -3,15 +3,15 @@ package repo
 import (
 	"os"
 	"path/filepath"
-)
 
-var gitDir = ".ggit"
+	"github.com/gold-chen-five/ggit/internal"
+)
 
 func InitRepository() error {
 	paths := []string{
-		gitDir,
-		filepath.Join(gitDir, "objects"),
-		filepath.Join(gitDir, "refs", "head"),
+		internal.GitDir,
+		filepath.Join(internal.GitDir, "objects"),
+		filepath.Join(internal.GitDir, "refs", "head"),
 	}
 
 	for _, path := range paths {
@@ -22,14 +22,14 @@ func InitRepository() error {
 	}
 
 	// Create HEAD file
-	headPath := filepath.Join(gitDir, "HEAD")
+	headPath := filepath.Join(internal.GitDir, "HEAD")
 	headContent := []byte("ref: refs/heads/master\n")
 	if err := os.WriteFile(headPath, headContent, 0644); err != nil {
 		return err
 	}
 
 	// Create config file (empty for now)
-	configPath := filepath.Join(gitDir, "config")
+	configPath := filepath.Join(internal.GitDir, "config")
 	file, err := os.Create(configPath)
 	if err != nil {
 		return err

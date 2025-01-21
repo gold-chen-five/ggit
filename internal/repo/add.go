@@ -1,10 +1,11 @@
 package repo
 
 import (
-	"crypto/sha1"
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/gold-chen-five/ggit/internal/tool"
 )
 
 // 1. read file conetent by filepath
@@ -18,13 +19,13 @@ func AddFileToIndex(path string) error {
 	}
 
 	// hash
-	hash := sha1.New()
-	hash.Write(content)
-	hashSum := hash.Sum(nil)
-	fileHash := fmt.Sprintf("%x", hashSum)
+	fileHash, err := tool.Hash(content)
+	if err != nil {
+		return err
+	}
 
 	// create folder and file
-	objectDir := filepath.Join(gitDir, "objects", fileHash[:2])
+	objectDir := filepath.Join(GitDir, "objects", fileHash[:2])
 	if err = os.Mkdir(objectDir, 0775); err != nil {
 		return err
 	}
@@ -34,7 +35,7 @@ func AddFileToIndex(path string) error {
 		return err
 	}
 
-	indexPath := filepath.Join(gitDir, "index")
+	indexPath := filepath.Join(GitDir, "index")
 	indexContent := fmt.Sprintf("%s %s\n", fileHash, path)
 	return os.WriteFile(indexPath, []byte(indexContent), 0644)
 }
