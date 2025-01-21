@@ -3,7 +3,6 @@ package tool
 import (
 	"bytes"
 	"compress/zlib"
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -18,9 +17,13 @@ var (
 	Blob   ObjectType = "blob"
 )
 
-func StoreObject(objectType ObjectType, content string) (string, error) {
-	data := fmt.Sprintf("%s %d\x00%s", objectType, len(content), content)
-	fileHash, err := Hash([]byte(data))
+// 1. hash it
+// 2. use first two hash characters create folder,
+// 3. remain characters be the file name
+// 4. compress content
+// 5. store the content in the file objects/xx/xxxxxx
+func StoreObject(data []byte) (string, error) {
+	fileHash, err := Hash(data)
 	if err != nil {
 		return "", err
 	}
@@ -32,7 +35,7 @@ func StoreObject(objectType ObjectType, content string) (string, error) {
 		return "", err
 	}
 
-	buf, err := CompressObject(data)
+	buf, err := compressObject(data)
 	if err != nil {
 		return "", err
 	}
@@ -44,12 +47,12 @@ func StoreObject(objectType ObjectType, content string) (string, error) {
 	return fileHash, nil
 }
 
-func CompressObject(data string) ([]byte, error) {
+func compressObject(data []byte) ([]byte, error) {
 	var buf bytes.Buffer
 	zw := zlib.NewWriter(&buf)
-	if _, err := zw.Write([]byte(data)); err != nil {
+	if _, err := zw.Write(data); err != nil {
 		return nil, err
 	}
-	defer zw.Close()
+	zw.Close()
 	return buf.Bytes(), nil
 }

@@ -10,7 +10,7 @@ func TestStoreObject(t *testing.T) {
 	tContent := "test content"
 
 	// action
-	_, err := StoreObject(Commit, tContent)
+	_, err := StoreObject([]byte(tContent))
 	if err != nil {
 		t.Fatalf("store object fail: %v", err)
 	}
@@ -26,7 +26,7 @@ func TestCompressObject(t *testing.T) {
 	tContent := "test content"
 
 	// action
-	buf, err := CompressObject(tContent)
+	buf, err := compressObject([]byte(tContent))
 	if err != nil {
 		t.Fatalf("compress object fail: %v", err)
 	}

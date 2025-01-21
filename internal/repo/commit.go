@@ -4,6 +4,8 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/gold-chen-five/ggit/internal"
 )
 
 type Commit struct {
@@ -21,13 +23,13 @@ type Person struct {
 }
 
 func CommitChanges(message string, author string) error {
-	//tree, err := createTreeOject()
-	// if err != nil {
-	// 	return err
-	// }
+	// read index file
+	indexPath := filepath.Join(internal.GitDir, "index")
+	indexContent, err := os.ReadFile(indexPath)
+	if err != nil {
+		return err
+	}
 
-	//parent := getParentCommitHash()
-	// create commit object
 	return nil
 }
 
@@ -36,7 +38,7 @@ func createTreeOject() (string, error) {
 }
 
 func getParentCommitHash() string {
-	headPath := filepath.Join(GitDir, "HEAD")
+	headPath := filepath.Join(internal.GitDir, "HEAD")
 	headContent, err := os.ReadFile(headPath)
 	if err != nil {
 		return ""
