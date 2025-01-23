@@ -24,11 +24,11 @@ type Person struct {
 
 func CommitChanges(message string, author string) error {
 	// read index file
-	indexPath := filepath.Join(internal.GitDir, "index")
-	indexContent, err := os.ReadFile(indexPath)
-	if err != nil {
-		return err
-	}
+	// indexPath := filepath.Join(internal.GitDir, "index")
+	// indexContent, err := os.ReadFile(indexPath)
+	// if err != nil {
+	// 	return err
+	// }
 
 	return nil
 }
