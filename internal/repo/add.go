@@ -24,5 +24,17 @@ func AddFileToIndex(path string) error {
 
 	indexPath := filepath.Join(internal.GitDir, "index")
 	indexContent := fmt.Sprintf("%d %s %s\n", 100644, fileHash, path)
-	return os.WriteFile(indexPath, []byte(indexContent), 0644)
+
+	// write to index file
+	file, err := os.OpenFile(indexPath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	if _, err = file.Write([]byte(indexContent)); err != nil {
+		return err
+	}
+
+	return nil
 }
