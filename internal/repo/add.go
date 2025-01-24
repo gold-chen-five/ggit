@@ -32,6 +32,21 @@ func AddFileToIndex(path string) error {
 	}
 	defer file.Close()
 
+	entries, err := readIndexFile()
+	if err != nil {
+		return err
+	}
+
+	index, isFound := FindEntry(entries, path)
+	if isFound {
+		if entries[index].Hash != fileHash {
+
+		}
+	} else {
+
+	}
+
+	// check
 	if _, err = file.Write([]byte(indexContent)); err != nil {
 		return err
 	}
