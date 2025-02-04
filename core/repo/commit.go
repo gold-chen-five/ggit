@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/gold-chen-five/ggit/internal"
+	"github.com/gold-chen-five/ggit/core"
 )
 
 type Commit struct {
@@ -38,7 +38,7 @@ func createTreeOject() (string, error) {
 }
 
 func getParentCommitHash() string {
-	headPath := filepath.Join(internal.GitDir, "HEAD")
+	headPath := filepath.Join(core.GitDir, "HEAD")
 	headContent, err := os.ReadFile(headPath)
 	if err != nil {
 		return ""

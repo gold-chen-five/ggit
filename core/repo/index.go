@@ -5,11 +5,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gold-chen-five/ggit/internal"
+	"github.com/gold-chen-five/ggit/core"
 )
 
 func readIndexFile() ([]Entry, error) {
-	indexPath := filepath.Join(internal.GitDir, "index")
+	indexPath := filepath.Join(core.GitDir, "index")
 	file, err := os.Open(indexPath)
 	if err != nil {
 		return nil, err
@@ -26,5 +26,10 @@ func readIndexFile() ([]Entry, error) {
 		return nil, err
 	}
 
-	return ToEntries(lines), nil
+	entries, err := ToEntries(lines)
+	if err != nil {
+		return nil, err
+	}
+
+	return entries, nil
 }

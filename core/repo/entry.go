@@ -2,16 +2,17 @@ package repo
 
 import (
 	"sort"
+	"strconv"
 	"strings"
 )
 
 type Entry struct {
-	Mode string
+	Mode uint32
 	Hash string
 	Path string
 }
 
-func ToEntries(lines []string) []Entry {
+func ToEntries(lines []string) ([]Entry, error) {
 	var indexEntries []Entry
 	for _, line := range lines {
 		splitLine := strings.Split(line, " ")
@@ -19,7 +20,11 @@ func ToEntries(lines []string) []Entry {
 		for index, s := range splitLine {
 			switch index {
 			case 0:
-				entry.Mode = s
+				suint, err := strconv.ParseUint(s, 10, 32)
+				if err != nil {
+					return nil, err
+				}
+				entry.Mode = uint32(suint)
 			case 1:
 				entry.Hash = s
 			case 2:
@@ -28,7 +33,7 @@ func ToEntries(lines []string) []Entry {
 		}
 		indexEntries = append(indexEntries, entry)
 	}
-	return indexEntries
+	return indexEntries, nil
 }
 
 // use binary search to find entry by path, return (index, isFound)

@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gold-chen-five/ggit/internal"
-	"github.com/gold-chen-five/ggit/internal/tool"
+	"github.com/gold-chen-five/ggit/core"
+	"github.com/gold-chen-five/ggit/core/tool"
 )
 
 // 1. read file conetent by filepath
@@ -22,10 +22,9 @@ func AddFileToIndex(path string) error {
 		return err
 	}
 
-	indexPath := filepath.Join(internal.GitDir, "index")
+	indexPath := filepath.Join(core.GitDir, "index")
 	indexContent := fmt.Sprintf("%d %s %s\n", 100644, fileHash, path)
 
-	// write to index file
 	file, err := os.OpenFile(indexPath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
@@ -36,19 +35,33 @@ func AddFileToIndex(path string) error {
 	if err != nil {
 		return err
 	}
-
 	index, isFound := FindEntry(entries, path)
-	if isFound {
-		if entries[index].Hash != fileHash {
 
+	var newContent string
+
+	if isFound {
+		en := entries[index]
+		if en.Hash != fileHash {
+			value := Entry{
+				Mode: 100644,
+				Hash: fileHash,
+				Path: path,
+			}
+
+			newEntries := tool.SliceInsert(entries, index, value)
+			for _, newEntry := range newEntries {
+				enStr := fmt.Sprintf("%d %s %s\n", 100644, newEntry.Hash, newEntry.Path)
+				newContent += enStr
+			}
+
+			if _, err = file.WriteString(newContent); err != nil {
+				return err
+			}
 		}
 	} else {
-
-	}
-
-	// check
-	if _, err = file.Write([]byte(indexContent)); err != nil {
-		return err
+		if _, err = file.WriteString(indexContent); err != nil {
+			return err
+		}
 	}
 
 	return nil

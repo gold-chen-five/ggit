@@ -5,8 +5,6 @@ import (
 	"compress/zlib"
 	"os"
 	"path/filepath"
-
-	"github.com/gold-chen-five/ggit/internal"
 )
 
 type ObjectType string

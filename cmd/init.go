@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/gold-chen-five/ggit/internal/repo"
+	"github.com/gold-chen-five/ggit/core/repo"
 	"github.com/spf13/cobra"
 )
 

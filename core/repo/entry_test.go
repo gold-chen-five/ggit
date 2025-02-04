@@ -10,13 +10,16 @@ func TestToEntries(t *testing.T) {
 		"100644 3b18e512dba79e4c8300dd08aeb37f8e728b8dad testcontent3.txt",
 	}
 	expected := []Entry{
-		{Mode: "100644", Hash: "3b18e512dba79e4c8300dd08aeb37f8e728b8dad", Path: "testcontent.txt"},
-		{Mode: "100644", Hash: "3b18e512dba79e4c8300dd08aeb37f8e728b8dad", Path: "testcontent2.txt"},
-		{Mode: "100644", Hash: "3b18e512dba79e4c8300dd08aeb37f8e728b8dad", Path: "testcontent3.txt"},
+		{Mode: 100644, Hash: "3b18e512dba79e4c8300dd08aeb37f8e728b8dad", Path: "testcontent.txt"},
+		{Mode: 100644, Hash: "3b18e512dba79e4c8300dd08aeb37f8e728b8dad", Path: "testcontent2.txt"},
+		{Mode: 100644, Hash: "3b18e512dba79e4c8300dd08aeb37f8e728b8dad", Path: "testcontent3.txt"},
 	}
 
 	// action
-	entries := ToEntries(testcases)
+	entries, err := ToEntries(testcases)
+	if err != nil {
+		t.Fatalf("toEntries error: %v", err)
+	}
 
 	// assert
 	for i, entry := range entries {
@@ -29,8 +32,8 @@ func TestToEntries(t *testing.T) {
 func TestFindEntry(t *testing.T) {
 	// arrange
 	entries := []Entry{
-		{Mode: "100644", Hash: "3b18e512dba79e4c8300dd08aeb37f8e728b8dad", Path: "testcontent.txt"},
-		{Mode: "100644", Hash: "3b18e512dba79e4c8300dd08aeb37f8e728b8dad", Path: "testcontent2.txt"},
+		{Mode: 100644, Hash: "3b18e512dba79e4c8300dd08aeb37f8e728b8dad", Path: "testcontent.txt"},
+		{Mode: 100644, Hash: "3b18e512dba79e4c8300dd08aeb37f8e728b8dad", Path: "testcontent2.txt"},
 	}
 
 	// action

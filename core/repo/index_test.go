@@ -10,8 +10,8 @@ func TestReadIndexFile(t *testing.T) {
 	// arrange
 	tPaths := []string{"testcontent.txt", "testcontent2.txt"}
 	expected := []Entry{
-		{Mode: "100644", Hash: "d7ef1105d426cd3b87a3cf315c763848fd8c7c14", Path: "testcontent.txt"},
-		{Mode: "100644", Hash: "2f3c6b82e94acbefbdcc4ac1d00fcfb416892355", Path: "testcontent2.txt"},
+		{Mode: 100644, Hash: "d7ef1105d426cd3b87a3cf315c763848fd8c7c14", Path: "testcontent.txt"},
+		{Mode: 100644, Hash: "2f3c6b82e94acbefbdcc4ac1d00fcfb416892355", Path: "testcontent2.txt"},
 	}
 	for i, tPath := range tPaths {
 		if err := os.WriteFile(tPath, []byte(fmt.Sprintf("test %d", i)), 0777); err != nil {
