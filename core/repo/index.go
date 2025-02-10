@@ -2,15 +2,13 @@ package repo
 
 import (
 	"bufio"
+	"fmt"
 	"os"
-	"path/filepath"
-
-	"github.com/gold-chen-five/ggit/core"
 )
 
-func readIndexFile() ([]Entry, error) {
-	indexPath := filepath.Join(core.GitDir, "index")
-	file, err := os.Open(indexPath)
+func readFile(path string) ([]Entry, error) {
+	// indexPath := filepath.Join(core.GitDir, "index")
+	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
@@ -19,6 +17,7 @@ func readIndexFile() ([]Entry, error) {
 	var lines []string
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
+		fmt.Println(scanner.Text())
 		lines = append(lines, scanner.Text())
 	}
 

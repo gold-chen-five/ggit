@@ -6,50 +6,40 @@ import (
 	"testing"
 )
 
-func TestReadIndexFile(t *testing.T) {
-	// arrange
-	tPaths := []string{"testcontent.txt", "testcontent2.txt"}
-	expected := []Entry{
-		{Mode: 100644, Hash: "d7ef1105d426cd3b87a3cf315c763848fd8c7c14", Path: "testcontent.txt"},
-		{Mode: 100644, Hash: "2f3c6b82e94acbefbdcc4ac1d00fcfb416892355", Path: "testcontent2.txt"},
+func TestReadFile(t *testing.T) {
+	path := "testcontent.txt"
+	expectEntry := Entry{
+		Mode: 100644,
+		Hash: "d7ef1105d426cd3b87a3cf315c763848fd8c7c14",
+		Path: path,
 	}
-	for i, tPath := range tPaths {
-		if err := os.WriteFile(tPath, []byte(fmt.Sprintf("test %d", i)), 0777); err != nil {
-			t.Fatalf("fail to create test file: %v", err)
-		}
+	content := fmt.Sprintf("%d %s %s\n", expectEntry.Mode, expectEntry.Hash, expectEntry.Path)
+	if err := os.WriteFile("testcontent.txt", []byte(content), 777); err != nil {
+		t.Fatalf("fail to create test file: %v", err)
 	}
 
 	// action
-	if err := InitRepository(); err != nil {
-		t.Fatalf("init .ggit fail: %v", err)
+	entries, err := readFile(path)
+	if err != nil {
+		t.Fatalf("read index file fail %v", err)
 	}
-
-	for _, tPath := range tPaths {
-		if err := AddFileToIndex(tPath); err != nil {
-			t.Fatalf("adding file fail %v", err)
-		}
-	}
+	actualEntry := entries[0]
 
 	// assert
-	entries, err := readIndexFile()
-	if err != nil {
-		t.Fatalf("read index file fail: %v", err)
+	if actualEntry.Mode != expectEntry.Mode {
+		t.Fatalf("expected Mode to be %d, but get %d", expectEntry.Mode, actualEntry.Mode)
 	}
 
-	for i, entry := range entries {
-		if entry != expected[i] {
-			t.Fatalf("expected %v but got %v", expected[i], entry)
-		}
+	if actualEntry.Hash != expectEntry.Hash {
+		t.Fatalf("expected Mode to be %s, but get %s", expectEntry.Hash, actualEntry.Hash)
+	}
+
+	if actualEntry.Path != expectEntry.Path {
+		t.Fatalf("expected Mode to be %s, but get %s", expectEntry.Path, actualEntry.Path)
 	}
 
 	// cleanup
-	if err := os.RemoveAll(".ggit"); err != nil {
-		t.Fatalf("remove .ggit fail: %v", err)
-	}
-
-	for _, tPath := range tPaths {
-		if err := os.Remove(tPath); err != nil {
-			t.Fatalf("cleanup %s fail: %v", tPath, err)
-		}
+	if err := os.Remove(path); err != nil {
+		t.Fatalf("cleanup %s fail: %v", path, err)
 	}
 }

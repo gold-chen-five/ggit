@@ -50,7 +50,7 @@ func FindEntry(entries []Entry, path string) (index int, isFound bool) {
 	return index, false
 }
 
-func convertEntriesToContent(entries []Entry) string {
+func ConvertEntriesToContent(entries []Entry) string {
 	var content string
 	for _, newEntry := range entries {
 		enStr := fmt.Sprintf("%d %s %s\n", 100644, newEntry.Hash, newEntry.Path)

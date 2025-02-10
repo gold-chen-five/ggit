@@ -35,10 +35,14 @@ func TestFindEntry(t *testing.T) {
 		{Mode: 100644, Hash: "3b18e512dba79e4c8300dd08aeb37f8e728b8dad", Path: "testcontent.txt"},
 		{Mode: 100644, Hash: "3b18e512dba79e4c8300dd08aeb37f8e728b8dad", Path: "testcontent2.txt"},
 	}
+	entries2 := []Entry{
+		{Mode: 100644, Hash: "3b18e512dba79e4c8300dd08aeb37f8e728b8dad", Path: "testcontent.txt"},
+	}
 
 	// action
 	index, isFound := FindEntry(entries, "testcontent2.txt")
 	index2, isFound2 := FindEntry(entries, "testcontent3.txt")
+	index3, isFound3 := FindEntry(entries2, "testcontent.txt")
 
 	// assert
 	if index != 1 || !isFound {
@@ -47,5 +51,9 @@ func TestFindEntry(t *testing.T) {
 
 	if index2 != 2 || isFound2 {
 		t.Fatalf("expected 2 but got %d, expected false but got %t", index2, isFound2)
+	}
+
+	if index3 != 0 || !isFound3 {
+		t.Fatalf("expected 0 but got %d, expected true but got %t", index3, isFound3)
 	}
 }

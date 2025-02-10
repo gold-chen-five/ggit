@@ -30,12 +30,13 @@ func AddFileToIndex(path string) error {
 	}
 	defer file.Close()
 
-	entries, err := readIndexFile()
+	entries, err := readFile(indexPath)
 	if err != nil {
 		return err
 	}
-	index, isFound := FindEntry(entries, path)
 
+	index, isFound := FindEntry(entries, path)
+	fmt.Print("index: %d", index)
 	newEntries := createNewEntries(isFound, fileHash, path, entries, index)
 
 	if newEntries != nil {

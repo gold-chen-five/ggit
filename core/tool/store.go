@@ -5,6 +5,8 @@ import (
 	"compress/zlib"
 	"os"
 	"path/filepath"
+
+	"github.com/gold-chen-five/ggit/core"
 )
 
 type ObjectType string
@@ -26,7 +28,7 @@ func StoreObject(data []byte) (string, error) {
 		return "", err
 	}
 
-	dir := filepath.Join(internal.GitDir, "objects", fileHash[:2])
+	dir := filepath.Join(core.GitDir, "objects", fileHash[:2])
 	file := filepath.Join(dir, fileHash[2:])
 
 	if err = os.MkdirAll(dir, 0775); err != nil {
