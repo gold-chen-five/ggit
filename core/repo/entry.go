@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -47,4 +48,13 @@ func FindEntry(entries []Entry, path string) (index int, isFound bool) {
 	}
 
 	return index, false
+}
+
+func convertEntriesToContent(entries []Entry) string {
+	var content string
+	for _, newEntry := range entries {
+		enStr := fmt.Sprintf("%d %s %s\n", 100644, newEntry.Hash, newEntry.Path)
+		content += enStr
+	}
+	return content
 }

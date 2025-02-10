@@ -23,9 +23,8 @@ func AddFileToIndex(path string) error {
 	}
 
 	indexPath := filepath.Join(core.GitDir, "index")
-	indexContent := fmt.Sprintf("%d %s %s\n", 100644, fileHash, path)
 
-	file, err := os.OpenFile(indexPath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(indexPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
 		return err
 	}
@@ -37,32 +36,39 @@ func AddFileToIndex(path string) error {
 	}
 	index, isFound := FindEntry(entries, path)
 
-	var newContent string
+	newEntries := createNewEntries(isFound, fileHash, path, entries, index)
 
-	if isFound {
-		en := entries[index]
-		if en.Hash != fileHash {
-			value := Entry{
-				Mode: 100644,
-				Hash: fileHash,
-				Path: path,
-			}
+	if newEntries != nil {
+		newContent := ConvertEntriesToContent(newEntries)
 
-			newEntries := tool.SliceInsert(entries, index, value)
-			for _, newEntry := range newEntries {
-				enStr := fmt.Sprintf("%d %s %s\n", 100644, newEntry.Hash, newEntry.Path)
-				newContent += enStr
-			}
-
-			if _, err = file.WriteString(newContent); err != nil {
-				return err
-			}
-		}
-	} else {
-		if _, err = file.WriteString(indexContent); err != nil {
+		if _, err = file.WriteString(newContent); err != nil {
 			return err
 		}
 	}
 
 	return nil
+}
+
+func createNewEntries(isFound bool, fileHash string, path string, entries []Entry, index int) []Entry {
+	var newEntries []Entry
+	if isFound {
+		en := entries[index]
+		if en.Hash != fileHash {
+			entries[index] = Entry{
+				Mode: 100644,
+				Hash: fileHash,
+				Path: path,
+			}
+			newEntries = entries
+		}
+	} else {
+		newEntry := Entry{
+			Mode: 100644,
+			Hash: fileHash,
+			Path: path,
+		}
+		newEntries = append(entries, newEntry) // Append new entry
+	}
+
+	return newEntries
 }
